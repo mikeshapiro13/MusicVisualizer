@@ -2,13 +2,22 @@ import React, { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.scss'
 import { Navbar } from './navbar/navbar'
-import { Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import About from './About';
+
+
 
 function App() {
 
   return (
     <>
       <Navbar />
+      <div className = "Router">
+      {/* Define routes */}
+      <Route path="/about" Component={About}/>
+      {/* Other routes go here */}
+    </div>
+
       <div className="page-content">
         <div className="home-container">
           <h1>Trends in the Spotify World</h1>
