@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.scss'
 import { Navbar } from './navbar/navbar'
+import { Link } from 'react-router-dom'
 
 function App() {
 
