@@ -1,7 +1,15 @@
 let connection;
 var oracledb = require("oracledb");
+var express = require("express");
+const { get } = require("http");
 
-(async function () {
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+async function oracleConnect() {
   try {
     connection = await oracledb.getConnection({
       user: "kyle.hoang",
@@ -10,7 +18,7 @@ var oracledb = require("oracledb");
     });
     console.log("Successfully connected to Oracle!");
     const result = await connection.execute(
-      `SELECT * from Songs where Artists = '[''Ariana Grande'']'`
+      `SELECT * from chartedSong where countryCharted = 'us'`
     );
     console.log(result);
   } catch (err) {
@@ -24,4 +32,11 @@ var oracledb = require("oracledb");
       }
     }
   }
-})();
+}
+
+oracleConnect();
+
+const port = 3000;
+app.listen(port, () => {
+  console.log(`App running on port ${port}...`);
+});
