@@ -5,11 +5,7 @@ const { get } = require("http");
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
-async function oracleConnect() {
+async function oracleConnect(req, res) {
   try {
     connection = await oracledb.getConnection({
       user: "kyle.hoang",
@@ -21,6 +17,7 @@ async function oracleConnect() {
       `SELECT * from chartedSong where countryCharted = 'us'`
     );
     console.log(result);
+    res.status(200).json(result);
   } catch (err) {
     console.log("Error: ", err);
   } finally {
@@ -34,7 +31,9 @@ async function oracleConnect() {
   }
 }
 
-oracleConnect();
+// oracleConnect();
+
+app.get("/", oracleConnect);
 
 const port = 3000;
 app.listen(port, () => {
