@@ -7,7 +7,7 @@
     "iroot": "npm i",
     "iclient": "cd client && npm i",
     "iserver": "cd server && npm i",
-    "iall": "npm run testroot && npm run testclient && npm run testserver",
+    "iall": "npm run iroot && npm run iclient && npm run iserver",
     "start": "concurrently \"npm run start-server\" \"npm run start-client\"",
     "start-client": "cd client && npm run dev",
     "start-server": "cd server && nodemon server.js",
