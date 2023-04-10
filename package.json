@@ -1,5 +1,26 @@
 {
-  "devDependencies": {
-    "sass": "^1.60.0"
-  }
+  "name": "musicvisualizer",
+  "version": "1.0.0",
+  "description": "CIS4301 Project",
+  "main": "index.js",
+  "scripts": {
+    "iroot": "npm i",
+    "iclient": "cd client && npm i",
+    "iserver": "cd server && npm i",
+    "iall": "npm run iroot && npm run iclient && npm run iserver",
+    "start": "concurrently \"npm run start-server\" \"npm run start-client\"",
+    "start-client": "cd client && npm run dev",
+    "start-server": "cd server && nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.0.1",
+    "oracledb": "^5.5.0"
+  },
+  "workspaces": [
+    "client",
+    "server"
+  ]
 }
