@@ -1,7 +1,7 @@
 import { Navbar } from '../navbar/navbar'
 import React from 'react';
 
-const About = () => {
+function About() {
 
   return (
     <>

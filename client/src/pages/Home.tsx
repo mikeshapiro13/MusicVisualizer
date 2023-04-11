@@ -1,12 +1,12 @@
 import React from 'react'
 
-function Query3() {
+function Home() {
 
     return (
       <>
         <div className="page-content">
           <div className="home-container">
-            <h1>This is Query3</h1>
+            <h1>This is Home</h1>
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi deserunt adipisci laudantium cum numquam blanditiis, eum voluptatum. Aliquid animi in architecto earum eum, optio deleniti. Iusto eligendi omnis ab quaerat?</p>
           </div>
         </div>
@@ -38,4 +38,4 @@ function Query3() {
     )
   }
   
-  export default Query3
+  export default Home
