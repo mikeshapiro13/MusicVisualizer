@@ -1,4 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
+import './navbar.scss';
+
 import './navbar.scss'
 
 export const Navbar = () => {
@@ -6,11 +9,11 @@ export const Navbar = () => {
     <nav>
       <div className="nav-content">
         <div className="nav-item">
-          <a>The Musical Trends</a>
+          <Link to="/">The Musical Trends</Link>
         </div>
         <div className='nav-item'>
-          <a>About</a>
-          <a>View Trends</a>
+          <Link to="/about">About</Link>
+          <Link to="/querymain">View Trends</Link>
         </div>
       </div>
 
