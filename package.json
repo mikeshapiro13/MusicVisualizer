@@ -17,10 +17,14 @@
   "license": "ISC",
   "dependencies": {
     "concurrently": "^8.0.1",
-    "oracledb": "^5.5.0"
+    "oracledb": "^5.5.0",
+    "react-router-dom": "^6.10.0"
   },
   "workspaces": [
     "client",
     "server"
-  ]
+  ],
+  "devDependencies": {
+    "@types/react-router-dom": "^5.3.3"
+  }
 }
