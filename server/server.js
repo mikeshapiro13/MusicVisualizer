@@ -1,41 +1,57 @@
-let connection;
-var oracledb = require("oracledb");
-var express = require("express");
-const { get } = require("http");
+const express = require('express');
+const oracledb = require('oracledb');
 
 const app = express();
+const port = 3000; // or any port of your choice
 
-async function oracleConnect(req, res) {
-  try {
-    connection = await oracledb.getConnection({
-      user: "kyle.hoang",
-      password: "9rfIUbwkC1ypweydgbnA3Ln8",
-      connectString: "oracle.cise.ufl.edu:1521/orcl",
-    });
-    console.log("Successfully connected to Oracle!");
-    const result = await connection.execute(
-      `SELECT * from chartedSong where countryCharted = 'us'`
-    );
-    console.log(result);
-    res.status(200).json(result);
-  } catch (err) {
-    console.log("Error: ", err);
-  } finally {
-    if (connection) {
-      try {
-        await connection.close();
-      } catch (err) {
-        console.log("Error when closing the database connection: ", err);
-      }
-    }
+// connect to Oracle database
+oracledb.getConnection({
+    user: "kyle.hoang",
+    password: "9rfIUbwkC1ypweydgbnA3Ln8",
+    connectString: "oracle.cise.ufl.edu:1521/orcl"
+}, (err, connection) => {
+  if (err) {
+    console.error(err.message);
+    return;
   }
-}
+  console.log('Connected to Oracle database');
 
-oracleConnect();
+  // set up routes
+  app.get('/query:id', (req, res) => {
+    const queryId = req.params.id;
+    let query;
+    switch (queryId) {
+      case '1':
+        query = 'SELECT COUNT(*) FROM Artist';
+        break;
+      case '2':
+        query = 'SELECT COUNT(*) FROM Song';
+        break;
+      case '3':
+        query = 'SELECT COUNT(*) FROM ChartedSong';
+        break;
+      case '4':
+        query = 'SELECT COUNT(*) FROM Genre';
+        break;
+      case '5':
+        query = 'SELECT COUNT(*) FROM ArtistGenres';
+        break;
+      default:
+        res.status(404).send('Invalid query ID');
+        return;
+    }
+    connection.execute(query, (err, result) => {
+      if (err) {
+        console.error(err.message);
+        res.status(500).send('Internal server error');
+        return;
+      }
+      res.send(result.rows);
+    });
+  });
 
-app.get("/", oracleConnect);
-
-const port = 3000;
-app.listen(port, () => {
-  console.log(`App running on port ${port}...`);
+  // start the server
+  app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+  });
 });
