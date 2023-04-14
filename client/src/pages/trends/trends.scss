@@ -1,0 +1,25 @@
+.trend-card{
+  border: 1px solid black;
+  border-radius: 0.5rem;
+  text-align: center;
+  cursor:pointer;
+  background-color: rgb(239, 239, 239);
+  text-decoration: none;
+  width: 250px;
+  height: 250px;
+  margin:2rem;
+  img{
+    width:60%;
+    height: 60%;
+    aspect-ratio: 1;
+  }
+}
+
+.trend-grid{
+  max-width: 960px;
+  .trend-row{
+    display:flex;
+    justify-content: space-evenly;
+  }
+}
+

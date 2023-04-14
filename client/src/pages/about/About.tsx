@@ -1,4 +1,4 @@
-import { Navbar } from '../navbar/navbar'
+import { Navbar } from '../../navbar/navbar'
 import React from 'react';
 
 function About() {
@@ -6,7 +6,7 @@ function About() {
   return (
     <>
       <Navbar />
-      </>
+    </>
   );
 };
 
