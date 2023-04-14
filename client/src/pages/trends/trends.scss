@@ -14,7 +14,10 @@
     aspect-ratio: 1;
   }
 }
+.trend-card:hover{
+  background-color: rgb(212, 212, 212);
 
+}
 .trend-grid{
   max-width: 960px;
   .trend-row{
