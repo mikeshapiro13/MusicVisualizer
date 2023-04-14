@@ -19,8 +19,8 @@ export const Trends = () => {
   return (
     <div>
       <Navbar />
-      <div className="page-content">
-        <div>
+      <div className="page">
+        <div className="page-content">
           <h1>View Trends</h1>
           <div className="trend-grid">
             <div className="trend-row">
