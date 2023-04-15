@@ -1,5 +1,5 @@
-const express = require('express');
-const oracledb = require('oracledb');
+const express = require("express");
+const oracledb = require("oracledb");
 
 const app = express();
 const port = 3000;
@@ -7,23 +7,23 @@ const port = 3000;
 // connect to Oracle database
 oracledb.getConnection(
   {
-    user: 'kyle.hoang',
-    password: '9rfIUbwkC1ypweydgbnA3Ln8',
-    connectString: 'oracle.cise.ufl.edu:1521/orcl',
+    user: "kyle.hoang",
+    password: "9rfIUbwkC1ypweydgbnA3Ln8",
+    connectString: "oracle.cise.ufl.edu:1521/orcl",
   },
   (err, connection) => {
     if (err) {
       console.error(err.message);
       return;
     }
-    console.log('Connected to Oracle database');
+    console.log("Connected to Oracle database");
 
     // set up routes
-    app.get('/query:id', (req, res) => {
+    app.get("/query:id", (req, res) => {
       const queryId = req.params.id;
       let query;
       switch (queryId) {
-        case '1':
+        case "1":
           const startYear = 2014;
           const endYear = 2015;
           query = `WITH Weeks AS (
@@ -58,20 +58,30 @@ oracledb.getConnection(
             }
           });
           break;
-        case '2':
-          query = 'SELECT * FROM Song FETCH FIRST 1 ROWS ONLY';
+        case "2":
+          query = `select extract(year from datecharted) as year, count(distinct name)
+          from chartedsong natural join artistsongs natural join artistgenres
+          group by extract(year from datecharted)
+          order by year asc`;
+          executeQuery(query, {}, (err, rows) => {
+            if (err) {
+              res.status(err).send(rows);
+            } else {
+              res.send(rows);
+            }
+          });
           break;
-        case '3':
-          query = 'SELECT * FROM ChartedSong FETCH FIRST 1 ROWS ONLY';
+        case "3":
+          query = "SELECT * FROM ChartedSong FETCH FIRST 1 ROWS ONLY";
           break;
-        case '4':
-          query = 'SELECT * FROM Genre FETCH FIRST 1 ROWS ONLY';
+        case "4":
+          query = "SELECT * FROM Genre FETCH FIRST 1 ROWS ONLY";
           break;
-        case '5':
-          query = 'SELECT * FROM ArtistGenres FETCH FIRST 1 ROWS ONLY';
+        case "5":
+          query = "SELECT * FROM ArtistGenres FETCH FIRST 1 ROWS ONLY";
           break;
         default:
-          res.status(404).send('Invalid query');
+          res.status(404).send("Invalid query");
           return;
       }
 
@@ -80,7 +90,7 @@ oracledb.getConnection(
         connection.execute(query, bindParams, (err, result) => {
           if (err) {
             console.error(err.message);
-            callback(500, 'Internal server error');
+            callback(500, "Internal server error");
             return;
           }
           callback(null, result.rows);
