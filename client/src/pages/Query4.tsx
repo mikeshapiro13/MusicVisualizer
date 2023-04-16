@@ -15,21 +15,7 @@ function Query4() {
         <div className="query-container">
           <h1>Queries</h1>
           <div className="query-grid">
-            <div>
-              <h3>Query 1</h3>
-            </div>
-            <div>
-              <h3>Query 1</h3>
-            </div>
-            <div>
-              <h3>Query 1</h3>
-            </div>
-            <div>
-              <h3>Query 1</h3>
-            </div>
-            <div>
-              <h3>Query 1</h3>
-            </div>
+           
           </div>
         </div>
       </div>
