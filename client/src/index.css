@@ -26,3 +26,9 @@
     background-color: #f9f9f9;
   }
 }
+
+.query-grid {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
