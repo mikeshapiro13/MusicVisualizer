@@ -1,5 +1,7 @@
 import React from 'react'
 import { Navbar } from '../navbar/navbar';
+import { Link } from 'react-router-dom';
+import '../index.css';
 
 function MainQuery() {
     return (
@@ -16,19 +18,29 @@ function MainQuery() {
               <h1>Queries</h1>
               <div className="query-grid">
                 <div>
-                  <h3>Query 1</h3>
+                  <h3>
+                    <Link to="/query1">Query 1</Link>
+                  </h3>
                 </div>
                 <div>
-                  <h3>Query 1</h3>
+                  <h3>
+                    <Link to="/query2">Query 2</Link>
+                  </h3>
                 </div>
                 <div>
-                  <h3>Query 1</h3>
+                  <h3>
+                    <Link to="/query3">Query 3</Link>
+                  </h3>
                 </div>
                 <div>
-                  <h3>Query 1</h3>
+                  <h3>
+                    <Link to="/query4">Query 4</Link>
+                  </h3>
                 </div>
                 <div>
-                  <h3>Query 1</h3>
+                  <h3>
+                    <Link to="/query5">Query 5</Link>
+                  </h3>
                 </div>
               </div>
             </div>
