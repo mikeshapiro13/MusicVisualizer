@@ -24,13 +24,13 @@ export const Trends = () => {
           <h1>View Trends</h1>
           <div className="trend-grid">
             <div className="trend-row">
-              <TrendCard title="Song Characteristics" linkTo="/query1" imgLink="https://media.istockphoto.com/id/1269732166/vector/vector-of-a-young-man-listening-to-the-music-with-headphones.jpg?s=612x612&w=0&k=20&c=dD3L7bMc-upx92zyHuBwaZG_OVEekdumN1lTCd50e4k="/>
-              <TrendCard title="Genre Diversity" linkTo="/query2" imgLink="https://media.istockphoto.com/id/1288712636/vector/crowd-of-young-and-elderly-men-and-women-in-trendy-hipster-clothes-diverse-group-of-stylish.jpg?s=612x612&w=0&k=20&c=APKR2QKkQdmiNaAlU0JHm9yp9qFw-s6Uuo6hwptuHqA="/>
-              <TrendCard title="Cultural Diversity" linkTo="/query2"/>
+              <TrendCard title="Song Characteristics" linkTo="/q1" imgLink="https://media.istockphoto.com/id/1269732166/vector/vector-of-a-young-man-listening-to-the-music-with-headphones.jpg?s=612x612&w=0&k=20&c=dD3L7bMc-upx92zyHuBwaZG_OVEekdumN1lTCd50e4k="/>
+              <TrendCard title="Genre Diversity" linkTo="/q2" imgLink="https://media.istockphoto.com/id/1288712636/vector/crowd-of-young-and-elderly-men-and-women-in-trendy-hipster-clothes-diverse-group-of-stylish.jpg?s=612x612&w=0&k=20&c=APKR2QKkQdmiNaAlU0JHm9yp9qFw-s6Uuo6hwptuHqA="/>
+              <TrendCard title="Cultural Diversity" linkTo="/q2"/>
             </div>
             <div className="trend-row">
-              <TrendCard title="Song Lengths" linkTo="/query2"/>
-              <TrendCard title="Optimal Times" linkTo="/query2"/>
+              <TrendCard title="Song Lengths" linkTo="/q2"/>
+              <TrendCard title="Optimal Times" linkTo="/q2"/>
             </div>
           </div>
         </div>

@@ -1,47 +1,39 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './query.scss'
 import { Navbar } from '../../navbar/navbar'
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 
 
-const DATA = [
-  {
-    name: '2016',
-    time: 158
-  },
-  {
-    name: '2017',
-    time: 160
-  },
-  {
-    name: '2018',
-    time: 169
-  },
-  {
-    name: '2019',
-    time: 182
-  },
-
-];
 
 const Graph = (props:any) => {
   return (
     <LineChart width={700} height={350} data={props.data}>
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="name" />
+      <XAxis dataKey="year" />
       <YAxis />
       <Tooltip />
       <Legend />
-      <Line type="monotone" dataKey="time" name="Average Song Length" stroke="#8884d8" activeDot={{ r: 8 }} />
+      <Line type="monotone" dataKey="time" name="Average Number of Streams" stroke="#8884d8" activeDot={{ r: 8 }} />
     </LineChart>
   );
 } 
+
 export const Query1 = () => {
 
-  const [data, setData] = useState(DATA);
-  const fetch = () => {
-
-  };
+  const [data, setData] = useState();
+  useEffect(() => {
+    fetch('/query1')
+      .then(res => res.json())
+      .then(queryData => {
+        setData(queryData.map(([year, week, time]) => ({
+          year: year.toString(),
+          week,
+          time,
+          }))
+        )
+      })
+      .catch(err => console.error(err))
+  }, [])
   return (
     <>
       <Navbar />

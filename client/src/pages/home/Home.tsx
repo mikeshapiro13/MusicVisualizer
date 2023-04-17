@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Navbar } from '../../navbar/navbar'
 import './home.scss'
 import '../../app.scss'
 function Home() {
 
+  
     return (
       <>
         <Navbar/>
@@ -25,7 +26,6 @@ function Home() {
                 make informed decisions. Start exploring today and discover the statistics behind your favorite music!
               </p>
             </div>
-
           </div>
         </div>
       </>
