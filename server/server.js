@@ -108,9 +108,57 @@ oracledb.getConnection(
             }
           });
           break;
+        
+          const aName = req.query.artistName;
+          const selectedGenre = req.query.selectedGenre;
+          query = `
+            SELECT 
+              a.name AS artist,
+              g.name AS genre,
+              MIN(s.tempo) AS min_tempo,
+              MAX(s.tempo) AS max_tempo,
+              AVG(s.tempo) AS avg_tempo
+            FROM 
+              Genre g
+              JOIN artistGenres ag ON g.name = ag.name
+              JOIN Artist a ON ag.aID = a.aID
+              JOIN ArtistSongs asg ON a.aID = asg.aID
+              JOIN Song s ON asg.sID = s.sID
+            WHERE 
+              a.name = :aName AND
+              g.name = :selectedGenre
+            GROUP BY 
+              a.name, g.name
+          `;
+          executeQuery(query, { aName, selectedGenre }, (err, rows) => {
+            if (err) {
+              res.status(err).send(rows);
+            } else {
+              res.send(rows);
+            }
+          });
+          break;
         case "5":
-          query = "SELECT TO_NUMBER(TO_CHAR(dateCharted, 'IW')) FROM ChartedSong FETCH FIRST 1 ROWS ONLY";
-          executeQuery(query, {  }, (err, rows) => {
+          const selectedName = req.query.name;
+          query = `
+              SELECT 
+                  a.name AS artist,
+                  s.year AS release_year,
+                  MIN(s.tempo) AS min_tempo,
+                  MAX(s.tempo) AS max_tempo,
+                  AVG(s.tempo) AS avg_tempo
+              FROM 
+                  Artist a
+                  JOIN ArtistSongs asg ON a.aID = asg.aID
+                  JOIN Song s ON asg.sID = s.sID
+              WHERE
+                  a.name = :selectedName
+              GROUP BY 
+                  a.name, s.year
+              ORDER BY 
+                  s.year ASC
+          `;
+          executeQuery(query, { selectedName }, (err, rows) => {
             if (err) {
               res.status(err).send(rows);
             } else {
