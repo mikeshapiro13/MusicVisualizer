@@ -25,7 +25,7 @@ oracledb.getConnection(
       switch (queryId) {
         case "1":
           const startYear = 2014;
-          const endYear = 2015;
+          const endYear = 2020;
           query = `WITH Weeks AS (
             SELECT 
               EXTRACT(YEAR FROM dateCharted) AS chart_year,
@@ -59,10 +59,11 @@ oracledb.getConnection(
           });
           break;
         case "2":
-          query = `select extract(year from datecharted) as year, count(distinct name)
-          from chartedsong natural join artistsongs natural join artistgenres
-          group by extract(year from datecharted)
-          order by year asc`;
+          query = `SELECT 
+                    EXTRACT(year FROM datecharted) AS year, COUNT(distinct name)
+                  FROM chartedsong NATURAL JOIN artistsongs NATURAL JOIN artistgenres
+                  GROUP BY EXTRACT(year FROM datecharted)
+                  ORDER BY year ASC`;
           executeQuery(query, {}, (err, rows) => {
             if (err) {
               res.status(err).send(rows);
@@ -73,12 +74,49 @@ oracledb.getConnection(
           break;
         case "3":
           query = "SELECT * FROM ChartedSong FETCH FIRST 1 ROWS ONLY";
+          executeQuery(query, {  }, (err, rows) => {
+            if (err) {
+              res.status(err).send(rows);
+            } else {
+              res.send(rows);
+            }
+          });
           break;
         case "4":
-          query = "SELECT * FROM Genre FETCH FIRST 1 ROWS ONLY";
+          const starter = 2014;
+          const ender = 2020;
+          query = `
+              SELECT 
+                TO_NUMBER(TO_CHAR(cs.dateCharted, 'IW')) AS yearWeek, 
+                AVG(si.musicIndex) AS avgMusicIndex,
+                EXTRACT(YEAR FROM cs.dateCharted) AS year
+              FROM ChartedSong cs
+              JOIN (
+                  SELECT sID, AVG(energy + songKey + songMode + acousticness + speechiness + valence + tempo + duration + timeSignature) AS musicIndex
+                  FROM Song
+                  GROUP BY sID
+              ) si ON cs.sID = si.sID
+              WHERE EXTRACT(YEAR FROM cs.dateCharted) BETWEEN :starter AND :ender
+              GROUP BY EXTRACT(YEAR FROM cs.dateCharted), TO_NUMBER(TO_CHAR(cs.dateCharted, 'IW'))
+              ORDER BY year 
+          `;
+          executeQuery(query, { starter, ender }, (err, rows) => {
+            if (err) {
+              res.status(err).send(rows);
+            } else {
+              res.send(rows);
+            }
+          });
           break;
         case "5":
-          query = "SELECT * FROM ArtistGenres FETCH FIRST 1 ROWS ONLY";
+          query = "SELECT TO_NUMBER(TO_CHAR(dateCharted, 'IW')) FROM ChartedSong FETCH FIRST 1 ROWS ONLY";
+          executeQuery(query, {  }, (err, rows) => {
+            if (err) {
+              res.status(err).send(rows);
+            } else {
+              res.send(rows);
+            }
+          });
           break;
         default:
           res.status(404).send("Invalid query");
