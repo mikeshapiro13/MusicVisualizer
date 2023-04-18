@@ -73,8 +73,28 @@ oracledb.getConnection(
           });
           break;
         case "3":
-          query = "SELECT * FROM ChartedSong FETCH FIRST 1 ROWS ONLY";
-          executeQuery(query, {  }, (err, rows) => {
+          const country = `fr`;
+          query = `select a.year, uspop, foreignPop, (uspop / foreignpop) as usInfluence
+          from 
+              (select year, count(a.sid) as usPop
+              from (select extract(year from datecharted) as year, sID
+              from chartedsong
+              where countrycharted = :country) a,
+              (select distinct sID
+              from chartedSong
+              where countryCharted = 'us') b
+              where a.sID = b.sID
+              group by year
+              order by year asc) a,
+              (select year, count(sid) as foreignPop
+              from (
+                  select extract(year from datecharted) as year, sID
+                  from chartedsong
+                  where countrycharted = :country)
+              group by year
+              order by year asc) b
+          where a.year = b.year`;
+          executeQuery(query, { country }, (err, rows) => {
             if (err) {
               res.status(err).send(rows);
             } else {
