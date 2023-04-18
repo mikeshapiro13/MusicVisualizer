@@ -73,7 +73,7 @@ oracledb.getConnection(
           });
           break;
         case "3":
-          const country = `fr`;
+          const country = req.query.country;
           query = `select a.year, uspop, foreignPop, (uspop / foreignpop) as usInfluence
           from 
               (select year, count(a.sid) as usPop
