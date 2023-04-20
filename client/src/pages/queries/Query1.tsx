@@ -1,55 +1,60 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './query.scss'
 import { Navbar } from '../../navbar/navbar'
-import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
+import Graph, { getMonthFromWeek } from './Graph';
 
 
-
-const Graph = (props:any) => {
-  return (
-    <LineChart width={700} height={350} data={props.data}>
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="year" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      <Line type="monotone" dataKey="time" name="Average Number of Streams" stroke="#8884d8" activeDot={{ r: 8 }} />
-    </LineChart>
-  );
-} 
 
 export const Query1 = () => {
-
+  const [start, setStart] = useState(2014);
+  const [end, setEnd] = useState(2020);
   const [data, setData] = useState();
+  const [doFetch, setDoFetch] = useState(true);
+  
   useEffect(() => {
-    fetch('/query1')
+    fetch('/query1/'+ start + '/' + end)
       .then(res => res.json())
       .then(queryData => {
         setData(queryData.map(([year, week, time]) => ({
-          year: year.toString(),
+          year: getMonthFromWeek(week) + ' ' + year.toString(),
           week,
           time,
           }))
         )
       })
       .catch(err => console.error(err))
-  }, [])
+  }, [doFetch])
   return (
     <>
       <Navbar />
       <div className="page">
         <div className="page-content">
-          <h1>Song Characteristics Overtime</h1>
-          <Graph data={ data }/>
+          <h1>Number of Streams Overtime</h1>
+          <Graph
+            data={data}
+            keyX={"year"}
+            keyY={"time"}
+            name={"Average Number of Streams"}
+          />
           <div className='p-container'>
             <div className="left">
-              <div>Param 1 <input id="param1"  /></div>
-              <div>Param 2 <input id="param2"/></div>
+              <div>Start Date: <input id="param1" value={ start } onChange={(s) => setStart(parseInt(s.target.value))}/></div>
+              <div>End Date: <input id="param2" value={ end } onChange={(e) => setEnd(parseInt(e.target.value))}/></div>
             </div>
-            <button>Set Params</button>
+            <button onClick={() => setDoFetch(!doFetch)}>Set Params</button>
           </div>
           <div className='d-container'>
-            Our first query will be computing the average number of streams per week for the Spotify top 50 charts. This will include finding the songs that were in the charts the same week and computing the average of all of their durations. These values will then be plotted over weeks to show how duration has changed week to week. Users will also be given the option to select the dates from which they would like to see data. 
+            The graph above focuses on computing the average number of streams per week of songs in the top 50 charts,
+            over a time span from 2014-2020. Each x axis value, represents one calender week, with the y axis representing
+            the average number of streams of songs in the Spotify top 50 charts associated with that week.
+            <br />
+            <br />
+            The trend that can be seen from this graph is upward trend in the number of streams average per week. This trend
+            shows the growth of spotify platform over the set time period, as the increases in streams directly correspond to
+            how many users are actively using the platform. This increasing trend in the chart is useful to investors, and
+            stockholders of the Spotify platform, as it shows the platform still has a very healthy number of users.
+            <br /><br />
+            One notable outlier of the data 
           </div>
         </div>
       </div>

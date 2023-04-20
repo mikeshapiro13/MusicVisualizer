@@ -20,10 +20,10 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/trends" element={<Trends />} />
           <Route path="/q1" element={<Query1 />} />
-          <Route path="/q2" element={<Query1 />} />
-          <Route path="/q3" element={<Query1 />} />
-          <Route path="/q4" element={<Query1 />} />
-          <Route path="/q5" element={<Query1 />} />
+          <Route path="/q2" element={<Query2 />} />
+          <Route path="/q3" element={<Query3 />} />
+          <Route path="/q4" element={<Query4 />} />
+          <Route path="/q5" element={<Query5 />} />
         </Routes>
       </div>
     </Router>

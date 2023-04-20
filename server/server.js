@@ -19,13 +19,15 @@ oracledb.getConnection(
     console.log("Connected to Oracle database");
 
     // set up routes
-    app.get("/query:id", (req, res) => {
+    app.get("/query:id/:start?/:end?/:country?/:name?", (req, res) => {
       const queryId = req.params.id;
       let query;
+      const startYear = req.params.start || 2014;
+      const endYear =  req.params.end || 2020;
       switch (queryId) {
+        
         case "1":
-          const startYear = 2014;
-          const endYear = 2020;
+
           query = `WITH Weeks AS (
             SELECT 
               EXTRACT(YEAR FROM dateCharted) AS chart_year,
@@ -74,8 +76,28 @@ oracledb.getConnection(
           });
           break;
         case "3":
-          query = "SELECT * FROM ChartedSong FETCH FIRST 1 ROWS ONLY";
-          executeQuery(query, {  }, (err, rows) => {
+          const country = req.query.country;
+          query = `select a.year, uspop, foreignPop, (uspop / foreignpop) as usInfluence
+          from 
+              (select year, count(a.sid) as usPop
+              from (select extract(year from datecharted) as year, sID
+              from chartedsong
+              where countrycharted = :country) a,
+              (select distinct sID
+              from chartedSong
+              where countryCharted = 'us') b
+              where a.sID = b.sID
+              group by year
+              order by year asc) a,
+              (select year, count(sid) as foreignPop
+              from (
+                  select extract(year from datecharted) as year, sID
+                  from chartedsong
+                  where countrycharted = :country)
+              group by year
+              order by year asc) b
+          where a.year = b.year`;
+          executeQuery(query, { country }, (err, rows) => {
             if (err) {
               res.status(err).send(rows);
             } else {
@@ -84,13 +106,13 @@ oracledb.getConnection(
           });
           break;
         case "4":
-          const starter = 2014;
-          const ender = 2020;
+          const starter = req.params.start || 2014;
+          const ender = req.params.end || 2020;
           query = `
               SELECT 
+                EXTRACT(YEAR FROM cs.dateCharted) AS year,
                 TO_NUMBER(TO_CHAR(cs.dateCharted, 'IW')) AS yearWeek, 
-                AVG(si.musicIndex) AS avgMusicIndex,
-                EXTRACT(YEAR FROM cs.dateCharted) AS year
+                AVG(si.musicIndex) AS avgMusicIndex
               FROM ChartedSong cs
               JOIN (
                   SELECT sID, AVG(energy + songKey + songMode + acousticness + speechiness + valence + tempo + duration + timeSignature) AS musicIndex
@@ -110,8 +132,26 @@ oracledb.getConnection(
           });
           break;
         case "5":
-          query = "SELECT TO_NUMBER(TO_CHAR(dateCharted, 'IW')) FROM ChartedSong FETCH FIRST 1 ROWS ONLY";
-          executeQuery(query, {  }, (err, rows) => {
+          const selectedName = req.query.name;
+          query = `
+              SELECT 
+                  a.name AS artist,
+                  s.year AS release_year,
+                  MIN(s.tempo) AS min_tempo,
+                  MAX(s.tempo) AS max_tempo,
+                  AVG(s.tempo) AS avg_tempo
+              FROM 
+                  Artist a
+                  JOIN ArtistSongs asg ON a.aID = asg.aID
+                  JOIN Song s ON asg.sID = s.sID
+              WHERE
+                  a.name = :selectedName
+              GROUP BY 
+                  a.name, s.year
+              ORDER BY 
+                  s.year ASC
+          `;
+          executeQuery(query, { selectedName }, (err, rows) => {
             if (err) {
               res.status(err).send(rows);
             } else {

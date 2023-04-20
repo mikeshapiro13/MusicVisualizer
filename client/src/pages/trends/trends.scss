@@ -5,9 +5,9 @@
   cursor:pointer;
   background-color: rgb(239, 239, 239);
   text-decoration: none;
-  width: 250px;
-  height: 250px;
-  margin:2rem;
+  width: 325px;
+  height: 325px;
+  margin:1rem;
   img{
     width:60%;
     height: 60%;
@@ -19,7 +19,7 @@
 
 }
 .trend-grid{
-  max-width: 960px;
+  max-width: 1080px;
   .trend-row{
     display:flex;
     justify-content: space-evenly;
