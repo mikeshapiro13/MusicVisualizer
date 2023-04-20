@@ -1,8 +1,12 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const oracledb = require("oracledb");
 
 const app = express();
 const port = 3000;
+
+// middleware
+app.use(bodyParser.json());
 
 // connect to Oracle database
 oracledb.getConnection(
@@ -17,6 +21,41 @@ oracledb.getConnection(
       return;
     }
     console.log("Connected to Oracle database");
+
+    // login route
+    app.post("/login", async (req, res) => {
+      try {
+        const username = req.body.username;
+        const password = req.body.password;
+
+        const test = await connection.execute(
+          'INSERT INTO Users VALUES (:username, :password)',
+          [username, password]
+        );
+
+        console.log(`username: ${username}, password: ${password}`);
+    
+        // execute the SQL query with the user input
+        const result = await connection.execute(
+          'SELECT * FROM Users WHERE username = :username AND password = :password',
+          [username, password]
+        );
+        console.log(result);
+    
+        // check if the query returned any results
+        if (result.rows.length === 1) {
+          // User exists in database and credentials are correct
+          res.json({ message: 'Login successful' });
+        } else {
+          // User does not exist in database or credentials are incorrect
+          res.status(401).json({ message: 'Invalid credentials' });
+        }
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    });
+    
 
     // set up routes
     app.get("/query:id/:start?/:end?/:country?/:name?", (req, res) => {
@@ -63,7 +102,8 @@ oracledb.getConnection(
           break;
         case "2":
           query = `SELECT 
-                    EXTRACT(year FROM datecharted) AS year, COUNT(distinct name)
+                    EXTRACT(year FROM datecharted) AS year,
+                    COUNT(distinct name)
                   FROM chartedsong NATURAL JOIN artistsongs NATURAL JOIN artistgenres
                   GROUP BY EXTRACT(year FROM datecharted)
                   ORDER BY year ASC`;
