@@ -25,7 +25,7 @@ export const Trends = () => {
           <div className="trend-grid">
             <div className="trend-row">
               <TrendCard title="Top 50 Average Streams" linkTo="/q1" imgLink="https://media.istockphoto.com/id/1269732166/vector/vector-of-a-young-man-listening-to-the-music-with-headphones.jpg?s=612x612&w=0&k=20&c=dD3L7bMc-upx92zyHuBwaZG_OVEekdumN1lTCd50e4k="/>
-              <TrendCard title="Genre Diversity" linkTo="/q2" imgLink="https://media.istockphoto.com/id/1288712636/vector/crowd-of-young-and-elderly-men-and-women-in-trendy-hipster-clothes-diverse-group-of-stylish.jpg?s=612x612&w=0&k=20&c=APKR2QKkQdmiNaAlU0JHm9yp9qFw-s6Uuo6hwptuHqA="/>
+              <TrendCard title="Genre Diversity" linkTo="/q2" imgLink="https://media.istockphoto.com/id/151902402/vector/diversity-tree-hands-illustration.jpg?s=612x612&w=0&k=20&c=iUXKYTP_hQ7Fpcdk6gfkDX3-pCL7PMMm12K9MCgy2JI="/>
               <TrendCard title="American Pop Influence" linkTo="/q3" imgLink="https://www.paragkhanna.com/wp-content/uploads/2020/07/empire.png"/>
             </div>
             <div className="trend-row">
