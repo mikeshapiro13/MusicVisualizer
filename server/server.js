@@ -159,6 +159,34 @@ oracledb.getConnection(
             }
           });
           break;
+        case "tuples":
+          query = `
+            SELECT COUNT(*) AS total_tuples
+            FROM ChartedSong
+            UNION ALL
+            SELECT COUNT(*) AS total_tuples
+            FROM Artist
+            UNION ALL
+            SELECT COUNT(*) AS total_tuples
+            FROM ArtistSongs
+            UNION ALL
+            SELECT COUNT(*) AS total_tuples
+            FROM Genre
+            UNION ALL
+            SELECT COUNT(*) AS total_tuples
+            FROM artistGenres
+            UNION ALL
+            SELECT COUNT(*) AS total_tuples
+            FROM Song          
+          `;
+          executeQuery(query, { }, (err, rows) => {
+            if (err) {
+              res.status(err).send(rows);
+            } else {
+              res.send(rows);
+            }
+          });
+          break;
         default:
           res.status(404).send("Invalid query");
           return;

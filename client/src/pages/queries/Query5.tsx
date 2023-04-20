@@ -64,10 +64,10 @@ export const Query5 = () => {
             <button onClick={() => setDoFetch(!doFetch)}>Set Params</button>
           </div>
           <div className='d-container'>
-            tbd
+          This retrieves the minimum, maximum, and average tempo of songs released by a specified artist for each year, sorted in ascending order by the release year. The query first joins the "Artist" table with the "ArtistSongs" and "Song" tables using the artist ID (aID) and song ID (sID). It filters the records based on the artist's name, which is provided as a parameter (selectedName). Then, the query groups the results by the artist's name and the song's release year. The final output consists of the artist's name, the release year, and the minimum, maximum, and average tempo values for the songs released in each year, sorted in ascending order by the release year.
             <br />
             <br />
-            tbd
+          The usefulness of this query lies in its ability to provide insights into the tempo characteristics of an artist's songs over their career. By calculating the minimum, maximum, and average tempo for each year, the query allows music industry professionals, fans, and analysts to identify the evolution of an artist's style and tempo preferences. This information can be valuable for understanding an artist's creative development, as well as for predicting the potential success of their future releases based on historical trends. Additionally, the query can help businesses tailor marketing campaigns, playlist curation, and promotional activities to better align with the artist's evolving style.
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Navbar } from '../../navbar/navbar'
 import './home.scss'
-import '../../app.scss'
+import '../../App.scss'
 function Home() {
 
   
