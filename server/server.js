@@ -26,21 +26,13 @@ oracledb.getConnection(
     app.post("/login", async (req, res) => {
       try {
         const username = req.body.username;
-        const password = req.body.password;
-
-        const test = await connection.execute(
-          'INSERT INTO Users VALUES (:username, :password)',
-          [username, password]
-        );
-
-        console.log(`username: ${username}, password: ${password}`);
+        const password = req.body.password
     
         // execute the SQL query with the user input
         const result = await connection.execute(
           'SELECT * FROM Users WHERE username = :username AND password = :password',
           [username, password]
         );
-        console.log(result);
     
         // check if the query returned any results
         if (result.rows.length === 1) {
