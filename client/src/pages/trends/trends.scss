@@ -1,0 +1,28 @@
+.trend-card{
+  border: 1px solid black;
+  border-radius: 0.5rem;
+  text-align: center;
+  cursor:pointer;
+  background-color: rgb(239, 239, 239);
+  text-decoration: none;
+  width: 325px;
+  height: 325px;
+  margin:1rem;
+  img{
+    width:60%;
+    height: 60%;
+    aspect-ratio: 1;
+  }
+}
+.trend-card:hover{
+  background-color: rgb(212, 212, 212);
+
+}
+.trend-grid{
+  max-width: 1080px;
+  .trend-row{
+    display:flex;
+    justify-content: space-evenly;
+  }
+}
+

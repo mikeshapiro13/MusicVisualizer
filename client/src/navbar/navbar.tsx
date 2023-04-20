@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import './navbar.scss';
 
-import './navbar.scss'
 
 export const Navbar = () => {
   return (
@@ -13,10 +12,9 @@ export const Navbar = () => {
         </div>
         <div className='nav-item'>
           <Link to="/about">About</Link>
-          <Link to="/querymain">View Trends</Link>
+          <Link to='/trends'>View Trends</Link>
         </div>
       </div>
-
     </nav>
   )
 }

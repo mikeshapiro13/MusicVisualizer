@@ -19,13 +19,15 @@ oracledb.getConnection(
     console.log("Connected to Oracle database");
 
     // set up routes
-    app.get("/query:id", (req, res) => {
+    app.get("/query:id/:start?/:end?/:country?/:name?", (req, res) => {
       const queryId = req.params.id;
       let query;
+      const startYear = req.params.start || 2014;
+      const endYear =  req.params.end || 2020;
       switch (queryId) {
+        
         case "1":
-          const startYear = 2014;
-          const endYear = 2020;
+
           query = `WITH Weeks AS (
             SELECT 
               EXTRACT(YEAR FROM dateCharted) AS chart_year,
@@ -49,6 +51,7 @@ oracledb.getConnection(
           ORDER BY
             chart_year,
             chart_week
+          
           `;
           executeQuery(query, { startYear, endYear }, (err, rows) => {
             if (err) {
@@ -103,13 +106,13 @@ oracledb.getConnection(
           });
           break;
         case "4":
-          const starter = 2014;
-          const ender = 2020;
+          const starter = req.params.start || 2014;
+          const ender = req.params.end || 2020;
           query = `
               SELECT 
+                EXTRACT(YEAR FROM cs.dateCharted) AS year,
                 TO_NUMBER(TO_CHAR(cs.dateCharted, 'IW')) AS yearWeek, 
-                AVG(si.musicIndex) AS avgMusicIndex,
-                EXTRACT(YEAR FROM cs.dateCharted) AS year
+                AVG(si.musicIndex) AS avgMusicIndex
               FROM ChartedSong cs
               JOIN (
                   SELECT sID, AVG(energy + songKey + songMode + acousticness + speechiness + valence + tempo + duration + timeSignature) AS musicIndex
@@ -121,36 +124,6 @@ oracledb.getConnection(
               ORDER BY year 
           `;
           executeQuery(query, { starter, ender }, (err, rows) => {
-            if (err) {
-              res.status(err).send(rows);
-            } else {
-              res.send(rows);
-            }
-          });
-          break;
-        
-          const aName = req.query.artistName;
-          const selectedGenre = req.query.selectedGenre;
-          query = `
-            SELECT 
-              a.name AS artist,
-              g.name AS genre,
-              MIN(s.tempo) AS min_tempo,
-              MAX(s.tempo) AS max_tempo,
-              AVG(s.tempo) AS avg_tempo
-            FROM 
-              Genre g
-              JOIN artistGenres ag ON g.name = ag.name
-              JOIN Artist a ON ag.aID = a.aID
-              JOIN ArtistSongs asg ON a.aID = asg.aID
-              JOIN Song s ON asg.sID = s.sID
-            WHERE 
-              a.name = :aName AND
-              g.name = :selectedGenre
-            GROUP BY 
-              a.name, g.name
-          `;
-          executeQuery(query, { aName, selectedGenre }, (err, rows) => {
             if (err) {
               res.status(err).send(rows);
             } else {
