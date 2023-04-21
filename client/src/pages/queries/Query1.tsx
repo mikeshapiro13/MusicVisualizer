@@ -56,7 +56,6 @@ export const Query1 = () => {
             how many users are actively using the platform. This increasing trend in the chart is useful to investors, and
             stockholders of the Spotify platform, as it shows the platform still has a very healthy number of users.
             <br /><br />
-            One notable outlier of the data 
           </div>
         </div>
       </div>

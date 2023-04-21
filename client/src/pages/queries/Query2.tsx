@@ -30,7 +30,7 @@ export const Query2 = () => {
             data={data}
             keyX={"year"}
             keyY={"genres"}
-            name={"Number of genres found in the top charts"}
+            name={"Average Number of Genres per Artist"}
           />
           <div className='p-container'>
             <div className="left">

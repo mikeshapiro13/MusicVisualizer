@@ -4,7 +4,22 @@ import './home.scss'
 import '../../App.scss'
 import AuthContext from '../../AuthContext'
 function Home() {
+  const [total, setTotal] = useState(null);
 
+  useEffect(() => {
+    fetch('/querytuples')
+      .then(response => response.json())
+      .then(data => {
+        const flattened = data.flat();
+        console.log(flattened);
+        const totalSum = flattened.reduce((total, value) => total + value, 0);
+        console.log(totalSum)
+        setTotal(totalSum);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
   return (
     <>
       <Navbar />
@@ -24,6 +39,7 @@ function Home() {
               topics in music have evolved over time. Our backend server processes complex queries from the frontend, giving you quick and easy access to valuable
               information. Whether you are a music fan or a professional in the industry, our platform is designed to provide you with the tools you need to
               make informed decisions. Start exploring today and discover the statistics behind your favorite music!
+              <span className='bold-text'> All in all, our database consists of {total ? total : 'Loading...'} tuples!</span>
             </p>
           </div>
         </div>
