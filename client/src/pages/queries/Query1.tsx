@@ -12,6 +12,8 @@ export const Query1 = () => {
   const [doFetch, setDoFetch] = useState(true);
   
   useEffect(() => {
+    setData(null);
+
     fetch('/query1/'+ start + '/' + end)
       .then(res => res.json())
       .then(queryData => {
@@ -29,7 +31,7 @@ export const Query1 = () => {
       <Navbar />
       <div className="page">
         <div className="page-content">
-          <h1>Number of Streams Overtime</h1>
+          <h1>Avgerage Number of Streams in Top 50</h1>
           <Graph
             data={data}
             keyX={"year"}
@@ -54,7 +56,6 @@ export const Query1 = () => {
             how many users are actively using the platform. This increasing trend in the chart is useful to investors, and
             stockholders of the Spotify platform, as it shows the platform still has a very healthy number of users.
             <br /><br />
-            One notable outlier of the data 
           </div>
         </div>
       </div>

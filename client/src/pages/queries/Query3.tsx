@@ -3,16 +3,17 @@ import { Navbar } from '../../navbar/navbar'
 import Graph from './Graph';
 
 export const Query3 = () => {
-  const [country, setCountry] = useState('us');
+  const [country, setCountry] = useState('br');
   const [data, setData] = useState();
   const [doFetch, setDoFetch] = useState(true);
   
   useEffect(() => {
+    setData(null);
     fetch('/query3/?country=' + country)
       .then(res => res.json())
       .then(queryData => {
         console.log(queryData)
-        setData(queryData.map(([year, genres]) => ({
+        setData(queryData.map(([year, dont,care, genres]) => ({
           year: year.toString(),
           totalStreams: genres
           }))
@@ -30,7 +31,8 @@ export const Query3 = () => {
             data={data}
             keyX={"year"}
             keyY={"totalStreams"}
-            name={"Number of Genres for Given Year"}
+            name={"Percentage of US Chart Influence"}
+            range={[0,1]}
           />
           <div className='p-container'>
             <div className="left">

@@ -15,9 +15,12 @@ const Graph = (props:any) => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey={props.keyX} />
             <YAxis domain={props.range || ['auto', 'auto']} />
-            <Tooltip   />
+            <Tooltip  wrapperStyle={{width:'50%'}} />
             <Legend />
-            <Line type="monotone" dataKey={props.keyY} name={props.name} stroke="#8884d8" activeDot={{ r: 8 }} />
+            <Line type="monotone" dataKey={props.keyY} name={props.name} stroke="#8884d8" activeDot={{ r: 12 }} />
+            {props.keyY2 && 
+              <Line type="monotone" dataKey={props.keyY2} name={props.name2} stroke="#84d888" activeDot={{ r: 12 }} floodColor={'#8884d8'}/>
+            }
           </LineChart>
         )
         :
