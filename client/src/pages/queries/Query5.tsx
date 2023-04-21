@@ -34,6 +34,7 @@ export const Query5 = () => {
   const [doFetch, setDoFetch] = useState(true);
   
   useEffect(() => {
+    setData(null);
     fetch('/query5/?name=' + name)
       .then(res => res.json())
       .then(queryData => {
@@ -55,7 +56,7 @@ export const Query5 = () => {
       <Navbar />
       <div className="page">
         <div className="page-content">
-          <h1>Artist Something</h1>
+          <h1>Artist Tempos</h1>
           <Graph data={data} />
           <div className='p-container'>
             <div className="left">

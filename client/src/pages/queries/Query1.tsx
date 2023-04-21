@@ -12,6 +12,8 @@ export const Query1 = () => {
   const [doFetch, setDoFetch] = useState(true);
   
   useEffect(() => {
+    setData(null);
+
     fetch('/query1/'+ start + '/' + end)
       .then(res => res.json())
       .then(queryData => {

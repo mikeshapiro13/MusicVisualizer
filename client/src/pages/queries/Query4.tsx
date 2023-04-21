@@ -9,6 +9,7 @@ export const Query4 = () => {
   const [doFetch, setDoFetch] = useState(true);
   
   useEffect(() => {
+    setData(null);
     fetch('/query4/'+ start + '/' + end)
       .then(res => res.json())
       .then(queryData => {
@@ -27,7 +28,7 @@ export const Query4 = () => {
       <Navbar />
       <div className="page">
         <div className="page-content">
-          <h1>Number of Streams Overtime</h1>
+          <h1>Music Index Overtime</h1>
           <Graph
             data={data}
             keyX={"year"}

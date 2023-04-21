@@ -23,11 +23,12 @@ oracledb.getConnection(
     console.log("Connected to Oracle database");
 
     // login route
-    app.post("/login", async (req, res) => {
+    app.post("/query/login", async (req, res) => {
       try {
         const username = req.body.username;
         const password = req.body.password
     
+        console.log(username, password)
         // execute the SQL query with the user input
         const result = await connection.execute(
           'SELECT * FROM Users WHERE username = :username AND password = :password',
@@ -47,14 +48,13 @@ oracledb.getConnection(
         res.status(500).json({ message: 'Internal server error' });
       }
     });
-    
 
     // set up routes
-    app.get("/query:id/:start?/:end?/:country?/:name?", (req, res) => {
+    app.get("/query:id/:start?/:end?/:country?/:name?/:t?", (req, res) => {
       const queryId = req.params.id;
       let query;
       const startYear = req.params.start || 2014;
-      const endYear =  req.params.end || 2020;
+      const endYear = req.params.end || 2020;
       switch (queryId) {
         
         case "1":
@@ -93,13 +93,21 @@ oracledb.getConnection(
           });
           break;
         case "2":
-          query = `SELECT 
-                    EXTRACT(year FROM datecharted) AS year,
-                    COUNT(distinct name)
-                  FROM chartedsong NATURAL JOIN artistsongs NATURAL JOIN artistgenres
-                  GROUP BY EXTRACT(year FROM datecharted)
-                  ORDER BY year ASC`;
-          executeQuery(query, {}, (err, rows) => {
+          const country1 = req.query.country;
+          query = `
+          SELECT a.year, noGenres, noArtists, (noGenres / noArtists) AS genresPerArtist
+            FROM (SELECT extract(year from datecharted) AS year, count(distinct aID) AS noArtists
+                  FROM chartedsong natural join artistsongs natural join artistgenres
+                  WHERE countryCharted = :country1
+                  GROUP BY extract(year from datecharted)
+                  ORDER BY year asc) a,
+              (SELECT extract(year from datecharted) AS year, count(distinct name) AS noGenres
+                  FROM chartedsong natural join artistsongs natural join artistgenres
+                  WHERE countryCharted = :country1
+                  GROUP BY extract(year from datecharted)
+                  ORDER BY year asc) b
+          WHERE a.year = b.year`;
+          executeQuery(query, { country1 }, (err, rows) => {
             if (err) {
               res.status(err).send(rows);
             } else {
@@ -191,6 +199,70 @@ oracledb.getConnection(
             }
           });
           break;
+        case "6":
+          const selectedTempo = req.query.t;
+          //ratios of distinct artist in top 50 vs distinct artist in genreal who make music
+          //greater than or less than a user inputted tempo over time (values for each)
+
+          //Useful to measure top heaviness in the chart in comparison to the tempo.
+          //The general trend that can be seen is that the higher the tempo within reason, the more likely
+          //a that tempo is to be top heavy in its charts distrubution
+
+          query = `
+          WITH ratio_query_greater_than AS (
+            SELECT t1.year, (t2.num_of_unique_t50/t1.num_of_unique) as ratio
+            FROM (
+              SELECT s.year AS year, COUNT(DISTINCT a.aID) as num_of_unique
+              FROM Artist a
+              JOIN ArtistSongs aso ON a.aID = aso.aID
+              JOIN Song s ON s.sID = aso.sID 
+              WHERE s.tempo < :selectedTempo
+              GROUP BY s.year
+            ) t1
+            INNER JOIN (
+              SELECT EXTRACT(YEAR FROM cs.dateCharted) AS year, COUNT(DISTINCT a.aID) as num_of_unique_t50
+              FROM Artist a
+              JOIN ArtistSongs aso ON a.aID = aso.aID
+              JOIN ChartedSong cs ON cs.sID = aso.sID
+              JOIN Song s ON aso.sID = s.sID
+              WHERE s.tempo < :selectedTempo
+              GROUP BY EXTRACT(YEAR FROM cs.dateCharted)
+            ) t2 ON t1.year = t2.year
+          ),
+          ratio_query_lower_than AS (
+            SELECT t1.year, (t2.num_of_unique_t50/t1.num_of_unique) as ratio
+            FROM (
+              SELECT s.year AS year, COUNT(DISTINCT a.aID) as num_of_unique
+              FROM Artist a
+              JOIN ArtistSongs aso ON a.aID = aso.aID
+              JOIN Song s ON s.sID = aso.sID 
+              WHERE s.tempo > :selectedTempo
+              GROUP BY s.year
+            ) t1
+            INNER JOIN (
+              SELECT EXTRACT(YEAR FROM cs.dateCharted) AS year, COUNT(DISTINCT a.aID) as num_of_unique_t50
+              FROM Artist a
+              JOIN ArtistSongs aso ON a.aID = aso.aID
+              JOIN ChartedSong cs ON cs.sID = aso.sID
+              JOIN Song s ON aso.sID = s.sID
+              WHERE s.tempo > :selectedTempo
+              GROUP BY EXTRACT(YEAR FROM cs.dateCharted)
+            ) t2 ON t1.year = t2.year
+          )
+          SELECT rq1.year, rq1.ratio as ratio1, rq2.ratio as ratio2
+          FROM ratio_query_lower_than rq1
+          JOIN ratio_query_greater_than rq2 ON rq1.year = rq2.year
+          ORDER BY rq1.year ASC
+          `;
+          
+          executeQuery(query, { selectedTempo }, (err, rows) => {
+            if (err) {
+              res.status(err).send(rows);
+            } else {
+              res.send(rows);
+            }
+          });
+          break;
         case "tuples":
           query = `
             SELECT COUNT(*) AS total_tuples
@@ -243,3 +315,50 @@ oracledb.getConnection(
     });
   }
 );
+
+/*
+            SELECT COUNT(DISTINCT a.aID) as num_of_artist_in_t50, EXTRACT(YEAR FROM cs.dateCharted)  AS year
+            FROM Artist a
+            JOIN ArtistSongs aso ON a.aID = aso.aID
+            JOIN ChartedSong cs ON cs.sID = aso.sID
+            GROUP BY cs.dateCharted 
+
+
+                      SELECT EXTRACT(YEAR FROM cs.dateCharted) AS year, COUNT(DISTINCT a.aID)
+            FROM Artist a
+            JOIN ArtistSongs aso ON a.aID = aso.aID
+            JOIN ChartedSong cs ON cs.sID = aso.sID
+            GROUP BY EXTRACT(YEAR FROM cs.dateCharted)
+          
+          
+          
+          
+            SELECT t1.year, (t2.num_of_unique_t50/t1.num_of_unique) as ratio, t3.avg_tempo
+            FROM (
+              SELECT s.year AS year, COUNT(DISTINCT a.aID) as num_of_unique
+              FROM Artist a
+              JOIN ArtistSongs aso ON a.aID = aso.aID
+              JOIN Song s ON s.sID = aso.sID
+              JOIN ArtistGenres ag ON ag.aID = a.aID
+              JOIN Genre g ON ag.name = g.name AND g.name='rap'
+              GROUP BY s.year
+            ) t1
+            INNER JOIN (
+              SELECT EXTRACT(YEAR FROM cs.dateCharted) AS year, COUNT(DISTINCT a.aID) as num_of_unique_t50
+              FROM Artist a
+              JOIN ArtistSongs aso ON a.aID = aso.aID
+              JOIN ChartedSong cs ON cs.sID = aso.sID
+              JOIN ArtistGenres ag ON ag.aID = a.aID
+              JOIN Genre g ON ag.name = g.name AND g.name='rap'
+              GROUP BY EXTRACT(YEAR FROM cs.dateCharted)
+            ) t2 ON t1.year = t2.year
+            JOIN (
+              SELECT AVG(s.tempo) AS avg_tempo, s.year
+              FROM Song s
+              JOIN ArtistSongs aso ON s.sID = aso.sID
+              JOIN ArtistGenres ag ON ag.aID = aso.aID AND ag.name = 'rap'
+              GROUP BY s.year 
+            ) t3 ON t3.year = t1.year
+
+            ORDER BY t1.year ASC
+*/

@@ -8,6 +8,7 @@ export const Query3 = () => {
   const [doFetch, setDoFetch] = useState(true);
   
   useEffect(() => {
+    setData(null);
     fetch('/query3/?country=' + country)
       .then(res => res.json())
       .then(queryData => {
