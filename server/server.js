@@ -63,8 +63,7 @@ oracledb.getConnection(
             SELECT 
               EXTRACT(YEAR FROM dateCharted) AS chart_year,
               TO_NUMBER(TO_CHAR(dateCharted, 'IW')) AS chart_week,
-              COUNT(*) AS num_songs,
-              SUM(streams) AS total_streams
+              AVG(streams) AS average_streams
             FROM 
               ChartedSong
             WHERE
@@ -76,13 +75,12 @@ oracledb.getConnection(
           SELECT
             chart_year,
             chart_week,
-            total_streams / num_songs AS average_streams_per_week
+            average_streams
           FROM
             Weeks
           ORDER BY
             chart_year,
             chart_week
-          
           `;
           executeQuery(query, { startYear, endYear }, (err, rows) => {
             if (err) {
