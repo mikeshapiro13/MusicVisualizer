@@ -172,26 +172,34 @@ oracledb.getConnection(
           });
           break;
         case "5":
-          const selectedName = req.query.name;
+          const selectedCo = req.query.name;
           query = `
               SELECT 
-                  a.name AS artist,
-                  s.year AS release_year,
-                  MIN(s.tempo) AS min_tempo,
-                  MAX(s.tempo) AS max_tempo,
+                  s.year AS song_year,
                   AVG(s.tempo) AS avg_tempo
               FROM 
-                  Artist a
-                  JOIN ArtistSongs asg ON a.aID = asg.aID
-                  JOIN Song s ON asg.sID = s.sID
-              WHERE
-                  a.name = :selectedName
-              GROUP BY 
-                  a.name, s.year
+                  Song s
+                  JOIN ChartedSong cs ON s.sID = cs.sID
+                  JOIN ArtistSongs asg ON s.sID = asg.sID
+                  JOIN Artist a ON asg.aID = a.aID
+              WHERE 
+                  s.year BETWEEN 2014 AND 2020
+                  AND cs.countryCharted = :selectedCo
+                  AND a.aID IN (
+                      SELECT aID 
+                      FROM (
+                          SELECT aID, COUNT(*) AS num_songs
+                          FROM ArtistSongs 
+                          GROUP BY aID
+                          HAVING COUNT(*) >= 5
+                      )
+                  )
+              GROUP BY
+                  s.year
               ORDER BY 
-                  s.year ASC
+                  song_year ASC 
           `;
-          executeQuery(query, { selectedName }, (err, rows) => {
+          executeQuery(query, { selectedCo }, (err, rows) => {
             if (err) {
               res.status(err).send(rows);
             } else {
