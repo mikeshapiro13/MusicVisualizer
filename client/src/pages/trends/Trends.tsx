@@ -29,9 +29,10 @@ export const Trends = () => {
               <TrendCard title="American Pop Influence" linkTo="/q3" imgLink="https://www.paragkhanna.com/wp-content/uploads/2020/07/empire.png"/>
             </div>
             <div className="trend-row">
-              <TrendCard title="Average Tempo and Top Artists" linkTo="/q6" imgLink=""/>
               <TrendCard title="Song Characteristics" linkTo="/q4" imgLink="https://thumbs.dreamstime.com/b/music-party-kawaii-design-musical-instruments-symbols-objects-cartoon-style-74810911.jpg"/>
               <TrendCard title="Artist Tempos" linkTo="/q5" imgLink="https://i.pinimg.com/736x/09/f1/3a/09f13ab59057807269b9b0a0e92029e6.jpg"/>
+              <TrendCard title="Average Tempo and Top Artists" linkTo="/q6" imgLink=""/>
+
             </div>
           </div>
         </div>

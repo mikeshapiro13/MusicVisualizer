@@ -25,7 +25,7 @@ export const Query2 = () => {
       <Navbar />
       <div className="page">
         <div className="page-content">
-          <h1>Genre Diversity in the Top Charts</h1>
+          <h1>Genre Diversity in the Top Charts for a Country</h1>
           <Graph
             data={data}
             keyX={"year"}

@@ -35,7 +35,7 @@ export const Query6 = () => {
             keyY2={"upperRatio"}
             name={"ratio lower than selected BPM Tempo"}
             name2={"ratio higher than selected BPM Tempo"}
-
+            
           />
           <div className='p-container'>
             <div className="left">

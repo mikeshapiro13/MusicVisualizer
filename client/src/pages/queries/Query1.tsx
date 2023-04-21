@@ -31,7 +31,7 @@ export const Query1 = () => {
       <Navbar />
       <div className="page">
         <div className="page-content">
-          <h1>Number of Streams Overtime</h1>
+          <h1>Avgerage Number of Streams in Top 50</h1>
           <Graph
             data={data}
             keyX={"year"}
